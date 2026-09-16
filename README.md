@@ -1,61 +1,112 @@
-# TextSystem
+# TextSystem - структурований текст на ООП
 
-Система представлення структурованого тексту, побудована на наслідуванні,
-поліморфізмі й абстракції, з окремим класом-будівельником для створення
-документів. Навчальний проект за технічним завданням (3 бали).
+![build](https://github.com/mvockob/TextSystem/actions/workflows/build.yml/badge.svg)
+![dotnet](https://img.shields.io/badge/.NET-8%2C_9%2C_10-512BD4?logo=dotnet&logoColor=white)
+![csharp](https://img.shields.io/badge/C%23-12-239120?logo=csharp&logoColor=white)
+![license](https://img.shields.io/badge/license-MIT-green)
+![last-commit](https://img.shields.io/github/last-commit/mvockob/TextSystem)
+
+Навчальний проєкт: система структурованого тексту на C#, перебудована на
+наслідуванні, поліморфізмі й абстракції, зі створенням документів через
+окремий клас-будівельник з уніфікованим API.
+
+## Зміст
+
+- [Можливості](#можливості)
+- [Технології](#технології)
+- [Структура](#структура)
+- [Швидкий старт](#швидкий-старт)
+- [Сумісність з версіями .NET](#сумісність-з-версіями-net)
+- [Діаграма класів](#діаграма-класів)
+- [Ролі класів](#ролі-класів)
+- [Автор](#автор)
+- [Ліцензія](#ліцензія)
+
+## Можливості
+
+* Елементи `Heading` / `Paragraph` / `Link` на спільному абстрактному
+  `TextElement`: рендер і внесок у зміст визначає сам елемент.
+* Зміст без перевірок конкретних типів: документ опитує елементи через
+  віртуальний `GetTableOfContentsEntry()` (Open/Closed).
+* Створення документа одним fluent-ланцюжком `DocumentBuilder`
+  (`AddHeading` / `AddParagraph` / `AddLink` / `MoveElement` / `Build`).
+
+## Технології
+
+| Технологія | Версія / примітка |
+|---|---|
+| C# | 12 |
+| .NET (таргети) | 8.0, 9.0, 10.0 (`RollForward LatestMajor`) |
+| .NET SDK для збірки | 10 або новіший |
+| PlantUML | діаграма класів (`docs/`) |
+| CI | GitHub Actions (Ubuntu + Windows) |
 
 ## Структура
 
-- `TextSystem/ITextElement.cs` - контракт елемента (`Render()`).
-- `TextSystem/TextElement.cs` - абстрактний базовий клас усіх елементів.
-- `TextSystem/Heading.cs`, `Paragraph.cs`, `Link.cs` - конкретні елементи.
-- `TextSystem/TextDocument.cs` - контейнер: порядок, рендер, зміст.
-- `TextSystem/DocumentBuilder.cs` - створення документа через fluent API.
-- `Program.cs` - демо-сценарій.
-- `docs/diagram.puml`, `docs/diagram.png` - діаграма класів.
+```
+TextSystem.csproj      - консольний застосунок, multi-target net8.0/9.0/10.0
+TextSystem/            - ITextElement, TextElement, Heading, Paragraph, Link,
+                         TextDocument, DocumentBuilder
+Program.cs             - демо-сценарій через DocumentBuilder
+docs/                  - діаграма класів (.puml + .png)
+```
 
-## Дизайн
+## Швидкий старт
 
-**Абстракція.** `TextElement` реалізує `ITextElement` і додає віртуальний
-метод `GetTableOfContentsEntry()` (за замовчуванням null - елемент не
-входить у зміст). `TextDocument` і `DocumentBuilder` працюють тільки через
-цей тип, downcast немає.
-
-**Наслідування.** `Heading`, `Paragraph`, `Link` успадковують `TextElement`.
-Властивості незмінні, рівень заголовка нормалізується в діапазон 1-6.
-
-**Поліморфізм.** Кожен елемент сам визначає `Render()` і свій внесок у
-зміст. `TextDocument` опитує елементи в циклі без перевірок конкретних
-типів, тому новий тип для змісту потребує лише перевизначення одного
-метода (Open/Closed). В оригіналі тут був `OfType<Heading>()` з доступом
-до конкретних полів.
-
-**Створення.** `DocumentBuilder` веде весь процес збірки:
-`AddHeading()` / `AddParagraph()` / `AddLink()` / `MoveElement()` /
-`Clear()` з ланцюжками викликів, в кінці `Build()` повертає готовий
-`TextDocument`. Клієнтський код не створює елементи напряму.
-
-## Діаграма класів
-
-![Діаграма класів TextSystem](docs/diagram.png)
-
-Ролі класів: `ITextElement` - мінімальний контракт; `TextElement` - центр
-абстракції; `Heading` / `Paragraph` / `Link` - конкретні формати;
-`TextDocument` - контейнер на поліморфних викликах; `DocumentBuilder` -
-єдиний API створення документа.
-
-## Збірка, запуск, версії .NET
+Потрібен [.NET 10 SDK](https://dotnet.microsoft.com/download) або новіший.
 
 ```bash
 dotnet build
 dotnet run
 ```
 
-Підтримуються .NET 8, 9 і 10: проект має три цільові фреймворки
-(`net8.0`, `net9.0`, `net10.0`), вивід програми на всіх трьох ідентичний.
-Запуск окремої версії: `dotnet run -f net8.0` (або `net9.0`, `net10.0`).
+Очікуваний вивід:
 
-У `csproj` задано `<RollForward>LatestMajor</RollForward>`, тому зібраний
-додаток стартує і на новіших мажорних рантаймах, якщо точного збігу версії
-немає. Збірка сувора (`TreatWarningsAsErrors` + XML-документація),
-попереджень немає.
+```
+========== TEXT SYSTEM ==========
+
+--- Table of Contents ---
+- Object-Oriented Programming
+  - Core Principles
+
+--- Rendered Document ---
+
+# Object-Oriented Programming
+OOP is a programming paradigm based on the concept of objects.
+
+## Core Principles
+[Read more here](https://docs.microsoft.com/dotnet/csharp/fundamentals/tutorials/oop)The four pillars are Encapsulation, Abstraction, Inheritance, and Polymorphism.
+```
+
+## Сумісність з версіями .NET
+
+* Збірка: .NET 10 SDK або новіший.
+* Запуск: рантайм .NET 8, 9 або 10 - перевірено на 8.0.31, 9.0.20 і 10.0.12,
+  вивід на всіх трьох ідентичний. Запуск окремої версії:
+  `dotnet run -f net8.0` (або `net9.0`, `net10.0`).
+* `RollForward LatestMajor` дозволяє запуск на новіших мажорних рантаймах,
+  коли точного збігу версії немає.
+* Рантайми старіші за 8.0 не підійдуть.
+
+## Діаграма класів
+
+![Діаграма класів TextSystem](docs/diagram.png)
+
+## Ролі класів
+
+| Клас | Роль |
+|---|---|
+| `ITextElement` | Мінімальний контракт рендеру, точка сумісності |
+| `TextElement` | Центр абстракції: спільний тип, віртуальна точка розширення для змісту |
+| `Heading` | Заголовок: рівень, markdown-рендер, рядок змісту з відступом |
+| `Paragraph` / `Link` | Звичайний текст і гіперпосилання, у зміст не входять |
+| `TextDocument` | Контейнер: порядок, рендер, зміст лише через поліморфні виклики |
+| `DocumentBuilder` | Єдиний API створення документа, fluent-ланцюжки, фінал `Build()` |
+
+## Автор
+
+Воскобойников Марк, КН-31
+
+## Ліцензія
+
+MIT - див. [LICENSE](LICENSE).

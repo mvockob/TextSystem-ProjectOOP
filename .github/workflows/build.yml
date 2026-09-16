@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build TextSystem.csproj --nologo
+
+      - name: Run and verify text output
+        run: |
+          dotnet run --project TextSystem.csproj --no-build > output.txt
+          grep -q "Table of Contents" output.txt
+          grep -q "Object-Oriented Programming" output.txt
+          grep -q "Core Principles" output.txt
+          grep -q "Read more here" output.txt
+          grep -q "The four pillars are Encapsulation" output.txt
