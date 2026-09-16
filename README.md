@@ -1,10 +1,10 @@
 # TextSystem - структурований текст на ООП
 
-![build](https://github.com/mvockob/TextSystem/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/mvockob/TextSystem-ProjectOOP/actions/workflows/build.yml/badge.svg)
 ![dotnet](https://img.shields.io/badge/.NET-8%2C_9%2C_10-512BD4?logo=dotnet&logoColor=white)
 ![csharp](https://img.shields.io/badge/C%23-12-239120?logo=csharp&logoColor=white)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![last-commit](https://img.shields.io/github/last-commit/mvockob/TextSystem)
+![last-commit](https://img.shields.io/github/last-commit/mvockob/TextSystem-ProjectOOP)
 
 Навчальний проєкт: система структурованого тексту на C#, перебудована на
 наслідуванні, поліморфізмі й абстракції, зі створенням документів через
