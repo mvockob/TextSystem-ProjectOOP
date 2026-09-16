@@ -91,6 +91,8 @@ OOP is a programming paradigm based on the concept of objects.
 
 ![Діаграма класів TextSystem](docs/diagram.png)
 
+Повний звіт з ролями класів: `docs/TextSystem_Report.docx`.
+
 ## Ролі класів
 
 | Клас | Роль |
