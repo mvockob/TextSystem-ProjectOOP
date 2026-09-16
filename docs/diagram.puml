@@ -1,0 +1,84 @@
+@startuml TextSystemDiagram
+' Class diagram for the restructured TextSystem.
+' Rendered with the built-in smetana engine (no Graphviz needed).
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+interface ITextElement {
+  + Render() : string
+}
+
+abstract class TextElement {
+  + Render() : string {abstract}
+  + GetTableOfContentsEntry() : string
+}
+
+class Heading {
+  + Level : int <<get>>
+  + Text : string <<get>>
+  + Render() : string
+  + GetTableOfContentsEntry() : string
+}
+
+class Paragraph {
+  + Content : string <<get>>
+  + Render() : string
+}
+
+class Link {
+  + DisplayText : string <<get>>
+  + Url : string <<get>>
+  + Render() : string
+}
+
+class TextDocument {
+  + Count : int <<get>>
+  + Elements : IReadOnlyList<TextElement> <<get>>
+  + AddElement(element : TextElement) : void
+  + RemoveElement(element : TextElement) : bool
+  + MoveElement(currentIndex : int, newIndex : int) : void
+  + Clear() : void
+  + RenderDocument() : string
+  + RenderTableOfContents() : string
+}
+
+class DocumentBuilder {
+  + Count : int <<get>>
+  + AddHeading(level : int, text : string) : DocumentBuilder
+  + AddParagraph(content : string) : DocumentBuilder
+  + AddLink(displayText : string, url : string) : DocumentBuilder
+  + MoveElement(currentIndex : int, newIndex : int) : DocumentBuilder
+  + Clear() : DocumentBuilder
+  + RenderDocument() : string
+  + RenderTableOfContents() : string
+  + Build() : TextDocument
+}
+
+ITextElement <|.. TextElement : realizes
+TextElement <|-- Heading : inherits
+TextElement <|-- Paragraph : inherits
+TextElement <|-- Link : inherits
+TextDocument "1" o-- "0..*" TextElement : contains
+DocumentBuilder "1" --> "1" TextDocument : builds and manages
+
+note top of TextElement
+  ABSTRACTION: single contract
+  for all elements. Clients use
+  TextElement and never downcast.
+end note
+
+note bottom of TextDocument
+  POLYMORPHISM: Render() and
+  GetTableOfContentsEntry() are
+  dispatched virtually. No OfType
+  checks inside the document.
+end note
+
+note right of DocumentBuilder
+  BUILDER / FACADE: one fluent API
+  for the whole creation process.
+  Client code never calls new on
+  elements directly.
+end note
+@enduml
