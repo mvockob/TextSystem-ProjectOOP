@@ -36,15 +36,15 @@
 | Технологія | Версія / примітка |
 |---|---|
 | C# | 12 |
-| .NET (таргети) | 8.0, 9.0, 10.0 (`RollForward LatestMajor`) |
-| .NET SDK для збірки | 10 або новіший |
+| .NET (таргет) | 8.0 (`net8.0`, `RollForward LatestMajor`) |
+| .NET SDK для збірки | 8 або новіший |
 | PlantUML | діаграма класів (`docs/`) |
 | CI | GitHub Actions (Ubuntu + Windows) |
 
 ## Структура
 
 ```
-TextSystem.csproj      - консольний застосунок, multi-target net8.0/9.0/10.0
+TextSystem.csproj      - консольний застосунок, таргет net8.0
 TextSystem/            - ITextElement, TextElement, Heading, Paragraph, Link,
                          TextDocument, DocumentBuilder
 Program.cs             - демо-сценарій через DocumentBuilder
@@ -53,7 +53,7 @@ docs/                  - діаграма класів (.puml + .png)
 
 ## Швидкий старт
 
-Потрібен [.NET 10 SDK](https://dotnet.microsoft.com/download) або новіший.
+Потрібен [.NET 8 SDK](https://dotnet.microsoft.com/download) або новіший.
 
 ```bash
 dotnet build
@@ -80,12 +80,11 @@ OOP is a programming paradigm based on the concept of objects.
 
 ## Сумісність з версіями .NET
 
-* Збірка: .NET 10 SDK або новіший.
+* Збірка: .NET 8 SDK або новіший - перевірено на 8.0.425 і 10.0.401.
 * Запуск: рантайм .NET 8, 9 або 10 - перевірено на 8.0.31, 9.0.20 і 10.0.12,
-  вивід на всіх трьох ідентичний. Запуск окремої версії:
-  `dotnet run -f net8.0` (або `net9.0`, `net10.0`).
-* `RollForward LatestMajor` дозволяє запуск на новіших мажорних рантаймах,
-  коли точного збігу версії немає.
+  вивід на всіх трьох ідентичний. Проєкт таргетує `net8.0`, а
+  `RollForward LatestMajor` дозволяє запуск на новіших рантаймах, коли 8.0
+  не встановлено.
 * Рантайми старіші за 8.0 не підійдуть.
 
 ## Діаграма класів
